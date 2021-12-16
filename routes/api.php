@@ -1,6 +1,6 @@
 <?php
 
-use Illuminate\Http\Request;
+use App\Http\Controllers\Api\V1\RegisterController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::apiResource('register', RegisterController::class)->only([ 'store' ]);
+
+//TODO All the Routes which require login go here
+Route::group([ 'middleware' => [ 'auth.basic.once' ] ], function () {
+
 });

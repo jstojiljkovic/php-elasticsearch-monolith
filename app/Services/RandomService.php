@@ -17,6 +17,7 @@ class RandomService implements RandomServiceInterface
      */
     public function __construct(RandomRepositoryInterface $randomRepository)
     {
+
         $this->randomRepository = $randomRepository;
     }
 

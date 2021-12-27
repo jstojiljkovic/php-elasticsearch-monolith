@@ -3,13 +3,15 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SearchRandomRequest;
 use App\Http\Requests\StoreRandomRequest;
 use App\Http\Requests\UpdateRandomRequest;
 use App\Interfaces\Services\RandomServiceInterface;
+use App\Interfaces\Services\SearchServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
-class RandomController extends Controller
+class RandomSQLController extends Controller
 {
     /**
      * @var RandomServiceInterface
@@ -17,13 +19,20 @@ class RandomController extends Controller
     protected RandomServiceInterface $randomService;
 
     /**
+     * @var SearchServiceInterface
+     */
+    protected SearchServiceInterface $searchService;
+
+    /**
      * RandomController constructor.
      *
      * @param RandomServiceInterface $randomService
      */
-    public function __construct(RandomServiceInterface $randomService)
+    public function __construct(RandomServiceInterface $randomService, SearchServiceInterface $searchService)
     {
         $this->randomService = $randomService;
+        $this->searchService = $searchService;
+
     }
 
     /**
@@ -65,6 +74,18 @@ class RandomController extends Controller
         $random = $this->randomService->update($id, $request->validated());
 
         return response()->json([ 'data' => $random ]);
+    }
+
+    /**
+     * @param SearchRandomRequest $request
+     *
+     * @return JsonResponse
+     */
+    public function textSearch(SearchRandomRequest $request): JsonResponse
+    {
+        $randomness = $this->searchService->findAllText($request->input('field'), $request->input('value'));
+
+        return response()->json([ 'data' => $randomness ]);
     }
 
     /**

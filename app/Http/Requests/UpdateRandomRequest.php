@@ -34,8 +34,8 @@ class UpdateRandomRequest extends FormRequest
             'expiration' => 'nullable|string',
             'hex_color' => 'nullable|string',
             'country' => 'nullable|string|max:100',
-            'latitude' => 'nullable|float',
-            'longitude' => 'nullable|float',
+            'latitude' => 'nullable',
+            'longitude' => 'nullable',
             'birthday' => 'nullable|date',
         ];
     }

@@ -36,6 +36,6 @@ final class CreateRandomness implements MigrationInterface
      */
     public function down(): void
     {
-        Index::drop('randomness_index');
+        Index::drop('randomness');
     }
 }

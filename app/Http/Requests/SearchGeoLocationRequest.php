@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SearchRandomRequest extends FormRequest
+class SearchGeoLocationRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,9 @@ class SearchRandomRequest extends FormRequest
     public function rules()
     {
         return [
-            'field' => 'required|string',
-            'value' => 'required|string'
+            'lat' => 'required',
+            'lon' => 'required',
+            'distance' => 'sometimes|int'
         ];
     }
 }

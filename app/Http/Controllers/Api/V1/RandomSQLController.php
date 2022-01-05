@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\SearchDateBetweenRequest;
+use App\Http\Requests\SearchGeoLocationRequest;
 use App\Http\Requests\SearchRandomRequest;
 use App\Http\Requests\StoreRandomRequest;
 use App\Http\Requests\UpdateRandomRequest;
@@ -89,6 +91,22 @@ class RandomSQLController extends Controller
     }
 
     /**
+     * @param SearchDateBetweenRequest $request
+     *
+     * @return JsonResponse
+     */
+    public function dateBetweenSearch(SearchDateBetweenRequest $request): JsonResponse
+    {
+        $randomness = $this->searchService->findBetweenDates(
+            $request->input('column'),
+            $request->input('start'),
+            $request->input('end')
+        );
+
+        return response()->json([ 'data' => $randomness ]);
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param int $id
@@ -100,5 +118,17 @@ class RandomSQLController extends Controller
         $this->randomService->delete($id);
 
         return response()->noContent();
+    }
+
+    /**
+     * @param SearchGeoLocationRequest $request
+     *
+     * @return JsonResponse
+     */
+    public function searchByGeoLocation(SearchGeoLocationRequest $request): JsonResponse
+    {
+        $randomness = $this->searchService->findByGeoLocation($request->input('lat'), $request->input('lon'));
+
+        return response()->json([ 'data' => $randomness ]);
     }
 }

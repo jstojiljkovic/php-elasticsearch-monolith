@@ -27,28 +27,28 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $latitude
  * @property float $longitude
  * @property string $birthday
- * @property-read Collection|User[] $users
+ * @property-read Collection|\App\Models\User[] $users
  * @property-read int|null $users_count
- * @method static RandomFactory factory( ...$parameters )
+ * @method static \Database\Factories\RandomFactory factory(...$parameters)
  * @method static Builder|Random newModelQuery()
  * @method static Builder|Random newQuery()
  * @method static Builder|Random query()
- * @method static Builder|Random whereBirthday( $value )
- * @method static Builder|Random whereCompany( $value )
- * @method static Builder|Random whereCountry( $value )
- * @method static Builder|Random whereCvv( $value )
- * @method static Builder|Random whereDescription( $value )
- * @method static Builder|Random whereExpiration( $value )
- * @method static Builder|Random whereHexColor( $value )
- * @method static Builder|Random whereIban( $value )
- * @method static Builder|Random whereId( $value )
- * @method static Builder|Random whereLatitude( $value )
- * @method static Builder|Random whereLongitude( $value )
- * @method static Builder|Random wherePan( $value )
- * @method static Builder|Random wherePhoneNumber( $value )
- * @method static Builder|Random whereType( $value )
- * @method static Builder|Random whereUserId( $value )
- * @mixin Eloquent
+ * @method static Builder|Random whereBirthday($value)
+ * @method static Builder|Random whereCompany($value)
+ * @method static Builder|Random whereCountry($value)
+ * @method static Builder|Random whereCvv($value)
+ * @method static Builder|Random whereDescription($value)
+ * @method static Builder|Random whereExpiration($value)
+ * @method static Builder|Random whereHexColor($value)
+ * @method static Builder|Random whereIban($value)
+ * @method static Builder|Random whereId($value)
+ * @method static Builder|Random whereLatitude($value)
+ * @method static Builder|Random whereLongitude($value)
+ * @method static Builder|Random wherePan($value)
+ * @method static Builder|Random wherePhoneNumber($value)
+ * @method static Builder|Random whereType($value)
+ * @method static Builder|Random whereUserId($value)
+ * @mixin \Eloquent
  */
 class Random extends Model
 {

@@ -44,4 +44,32 @@ class SearchService implements SearchServiceInterface
     {
        return $this->searchRepository->findAllText($field, $value);
     }
+
+    /**
+     * Returns all the results matching between two dates
+     *
+     * @param $column
+     * @param $start
+     * @param $end
+     *
+     * @return array
+     */
+    public function findBetweenDates($column, $start, $end): array
+    {
+        return $this->searchRepository->findBetweenDates($column, $start, $end);
+    }
+
+    /**
+     * Returns all the results matching geo location
+     *
+     * @param $latitude
+     * @param $longitude
+     * @param int $distance
+     *
+     * @return array
+     */
+    public function findByGeoLocation($latitude, $longitude, int $distance = 15): array
+    {
+        return $this->searchRepository->findByGeoLocation($latitude, $longitude, $distance);
+    }
 }

@@ -34,8 +34,8 @@ class StoreRandomRequest extends FormRequest
             'expiration' => 'required|string',
             'hex_color' => 'required|string',
             'country' => 'nullable|string|max:100',
-            'latitude' => 'required|float',
-            'longitude' => 'required|float',
+            'latitude' => 'required',
+            'longitude' => 'required',
             'birthday' => 'required|date',
         ];
     }

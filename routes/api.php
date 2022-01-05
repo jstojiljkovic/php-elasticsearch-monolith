@@ -20,7 +20,11 @@ Route::apiResource('register', RegisterController::class)->only([ 'store' ]);
 
 //TODO All the Routes which require login go here
 Route::group([ 'middleware' => [ 'auth.basic.once' ] ], function () {
-    Route::get('sql/randomness/search', [ RandomSQLController::class, 'textSearch' ])->name('randomness.textSearch');
-    Route::get('es/randomness/search', [ RandomESController::class, 'textSearch' ])->name('randomness.textSearch');
+    Route::get('sql/randomness/text-search', [ RandomSQLController::class, 'textSearch' ])->name('randomness.textSearch');
+    Route::get('sql/randomness/date-search', [ RandomSQLController::class, 'dateBetweenSearch' ])->name('randomness.dateBetweenSearch');
+    Route::get('sql/randomness/location-search', [ RandomSQLController::class, 'searchByGeoLocation' ])->name('randomness.searchByGeoLocation');
+    Route::get('es/randomness/text-search', [ RandomESController::class, 'textSearch' ])->name('randomness.textSearch');
+    Route::get('es/randomness/date-search', [ RandomESController::class, 'dateBetweenSearch' ])->name('randomness.dateBetweenSearch');
+    Route::get('es/randomness/location-search', [ RandomESController::class, 'searchByGeoLocation' ])->name('randomness.searchByGeoLocation');
     Route::apiResource('sql/randomness', RandomSQLController::class);
 });

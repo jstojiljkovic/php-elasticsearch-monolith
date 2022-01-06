@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\V1\CombinedController;
 use App\Http\Controllers\Api\V1\RandomESController;
 use App\Http\Controllers\Api\V1\RandomSQLController;
 use App\Http\Controllers\Api\V1\RegisterController;
@@ -27,4 +28,7 @@ Route::group([ 'middleware' => [ 'auth.basic.once' ] ], function () {
     Route::get('es/randomness/date-search', [ RandomESController::class, 'dateBetweenSearch' ])->name('randomness.dateBetweenSearch');
     Route::get('es/randomness/location-search', [ RandomESController::class, 'searchByGeoLocation' ])->name('randomness.searchByGeoLocation');
     Route::apiResource('sql/randomness', RandomSQLController::class);
+    Route::get('randomness/text-search', [ CombinedController::class, 'textSearch' ])->name('randomness.textSearch');
+    Route::get('randomness/date-search', [ CombinedController::class, 'dateBetweenSearch' ])->name('randomness.dateBetweenSearch');
+    Route::get('randomness/location-search', [ CombinedController::class, 'searchByGeoLocation' ])->name('randomness.searchByGeoLocation');
 });

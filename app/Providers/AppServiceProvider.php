@@ -2,11 +2,13 @@
 
 namespace App\Providers;
 
+use App\Http\Controllers\Api\V1\CombinedController;
 use App\Http\Controllers\Api\V1\RandomESController;
 use App\Http\Controllers\Api\V1\RandomSQLController;
 use App\Interfaces\Services\RandomServiceInterface;
 use App\Interfaces\Services\SearchServiceInterface;
 use App\Interfaces\Services\UserServiceInterface;
+use App\Repositories\CombinedRepository;
 use App\Repositories\ElasticSearchSearchRepository;
 use App\Repositories\EloquentSearchRepository;
 use App\Services\ElasticSearchSearchService;
@@ -37,6 +39,11 @@ class AppServiceProvider extends ServiceProvider
             ->needs(SearchServiceInterface::class)
             ->give(function () {
                 return new SearchService(new ElasticSearchSearchRepository());
+            });
+        $this->app->when(CombinedController::class)
+            ->needs(SearchServiceInterface::class)
+            ->give(function () {
+                return new SearchService(new CombinedRepository());
             });
     }
 

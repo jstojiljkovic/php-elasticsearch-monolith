@@ -60,6 +60,47 @@ class ElasticSearchWrapperService implements ElasticSearchWrapperInterface
     }
 
     /**
+     * Returns number of matches for a search query
+     *
+     * @param $index
+     * @param $filters
+     *
+     * @return int
+     */
+    public function count($index, $filters): int
+    {
+        return $this->elasticSearch->count($this->getCountSearchParams($index, $filters))['count'];
+    }
+
+    /**
+     * Count Search ElasticSearch Parameters
+     *
+     * @param $index
+     * @param $filters
+     *
+     * @return mixed
+     */
+    private function getCountSearchParams($index, $filters)
+    {
+        $params = [
+            'index' => $index,
+            'body' => [
+                'query' => [
+                    'bool' => [
+                        'must' => [],
+                        'filter' => [],
+                        'must_not' => []
+                    ],
+                ],
+            ],
+        ];
+
+        $params = $this->setFilters($params, $filters);
+
+        return $params;
+    }
+
+    /**
      * Scroll Search ElasticSearch Parameters
      * Scroll allow us to break data into chunks
      *

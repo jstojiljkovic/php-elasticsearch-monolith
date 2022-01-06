@@ -60,7 +60,11 @@ class CombinedController
      */
     public function searchByGeoLocation(SearchGeoLocationRequest $request): JsonResponse
     {
-        $randomness = $this->searchService->findByGeoLocation($request->input('lat'), $request->input('lon'));
+        $randomness = $this->searchService->findByGeoLocation(
+            $request->input('lat'),
+            $request->input('lon'),
+            $request->input('distance', 15)
+        );
 
         return response()->json([ 'data' => $randomness ]);
     }

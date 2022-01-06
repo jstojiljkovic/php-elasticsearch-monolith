@@ -2,12 +2,29 @@
 
 namespace App\Repositories;
 
+use App\Helpers\DataFormatter;
 use App\Interfaces\Repositories\SearchRepositoryInterface;
+use App\Interfaces\Services\ElasticSearchWrapperInterface;
 use App\Models\Random;
-use ElasticScoutDriverPlus\Support\Query;
+use Illuminate\Support\Facades\DB;
 
 class CombinedRepository implements SearchRepositoryInterface
 {
+    /**
+     * @var ElasticSearchWrapperInterface
+     */
+    protected ElasticSearchWrapperInterface $elasticSearchWrapper;
+
+    /**
+     * CombinedRepository constructor.
+     *
+     * @param ElasticSearchWrapperInterface $elasticSearchWrapper
+     */
+    public function __construct(ElasticSearchWrapperInterface $elasticSearchWrapper)
+    {
+        $this->elasticSearchWrapper = $elasticSearchWrapper;
+    }
+
     /**
      * Returns all random
      *
@@ -28,22 +45,17 @@ class CombinedRepository implements SearchRepositoryInterface
      */
     public function findAllText($field, $value): array
     {
-        $begin = microtime(true);
+        $sqlBegin = microtime(true);
         $sqlCount = Random::where($field, 'like', '%' . $value . '%')->get()->count();
-        $end = microtime(true) - $begin;
+        $sqlEnd = microtime(true) - $sqlBegin;
 
+        $filters[] = [ 'operator' => 'eq', 'property' => $field, 'value' => $value ];
 
-        $query = Query::match()
-            ->field($field)
-            ->query($value);
+        $elasticBegin = microtime(true);
+        $elasticCount = $this->elasticSearchWrapper->count('randomness', $filters);
+        $elasticEnd = microtime(true) - $elasticBegin;
 
-        $randomness = Random::searchQuery($query)->execute();
-
-        dump($randomness);
-
-        return [
-          'time' => $randomness->raw()['took'] / 1000
-        ];
+        return DataFormatter::formatCombinedData($sqlEnd, $sqlCount, $elasticEnd, $elasticCount);
     }
 
     /**
@@ -57,7 +69,20 @@ class CombinedRepository implements SearchRepositoryInterface
      */
     public function findBetweenDates($column, $start, $end): array
     {
-        // TODO: Implement findBetweenDates() method.
+        $sqlBegin = microtime(true);
+        $sqlCount = Random::whereBetween($column, [ $start, $end ])->get()->count();
+        $sqlEnd = microtime(true) - $sqlBegin;
+
+        $filters[] = [ 'operator' => 'range', 'property' => $column, 'value' => [
+            'gte' => $start,
+            'lte' => $end
+        ] ];
+
+        $elasticBegin = microtime(true);
+        $elasticCount = $this->elasticSearchWrapper->count('randomness', $filters);
+        $elasticEnd = microtime(true) - $elasticBegin;
+
+        return DataFormatter::formatCombinedData($sqlEnd, $sqlCount, $elasticEnd, $elasticCount);
     }
 
     /**
@@ -71,6 +96,27 @@ class CombinedRepository implements SearchRepositoryInterface
      */
     public function findByGeoLocation($latitude, $longitude, int $distance = 15): array
     {
-        // TODO: Implement findByGeoLocation() method.
+        $sqlBegin = microtime(true);
+        $sqlCount = Random::select([
+            '*',
+            DB::raw('( 6371 * acos( cos( radians(' . $latitude . ') ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(' . $longitude . ') ) + sin( radians(' . $latitude . ') ) * sin( radians(latitude) ) ) ) AS distance') ])
+            ->havingRaw('distance < ' . $distance)
+            ->get()
+            ->count();
+        $sqlEnd = microtime(true) - $sqlBegin;
+
+        $filters[] = [ 'operator' => 'geo_distance', 'value' => [
+            'distance' => $distance . 'km',
+            'location' => [
+                'lat' => $latitude,
+                'lon' => $longitude
+            ]
+        ] ];
+
+        $elasticBegin = microtime(true);
+        $elasticCount = $this->elasticSearchWrapper->count('randomness', $filters);
+        $elasticEnd = microtime(true) - $elasticBegin;
+
+        return DataFormatter::formatCombinedData($sqlEnd, $sqlCount, $elasticEnd, $elasticCount);
     }
 }

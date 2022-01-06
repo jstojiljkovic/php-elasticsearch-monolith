@@ -55,7 +55,14 @@ class AppServiceProvider extends ServiceProvider
         $this->app->when(CombinedController::class)
             ->needs(SearchServiceInterface::class)
             ->give(function () {
-                return new SearchService(new CombinedRepository());
+                return new SearchService(new CombinedRepository(
+                    new ElasticSearchWrapperService(
+                        new Manager(
+                            $this->app,
+                            new Factory()
+                        )
+                    )
+                ));
             });
     }
 

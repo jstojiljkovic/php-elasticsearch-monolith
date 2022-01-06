@@ -8,7 +8,6 @@ use App\Http\Requests\SearchGeoLocationRequest;
 use App\Http\Requests\SearchRandomRequest;
 use App\Interfaces\Services\SearchServiceInterface;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class RandomESController extends Controller
 {
@@ -62,7 +61,11 @@ class RandomESController extends Controller
      */
     public function searchByGeoLocation(SearchGeoLocationRequest $request): JsonResponse
     {
-        $randomness = $this->searchService->findByGeoLocation($request->input('lat'), $request->input('lon'));
+        $randomness = $this->searchService->findByGeoLocation(
+            $request->input('lat'),
+            $request->input('lon'),
+            $request->input('distance', 15)
+        );
 
         return response()->json([ 'data' => $randomness ]);
     }

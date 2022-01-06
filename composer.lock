@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "56fd6ecb720ba92a63bab17d4459afad",
+    "content-hash": "987f6d1f8d7f1d863d24f060e11aa057",
     "packages": [
         {
             "name": "asm89/stack-cors",
@@ -483,6 +483,75 @@
                 }
             ],
             "time": "2021-08-15T20:50:18+00:00"
+        },
+        {
+            "name": "cviebrock/laravel-elasticsearch",
+            "version": "8.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cviebrock/laravel-elasticsearch.git",
+                "reference": "d135f3ffd560cb465910d6d39edb5206d11c0f2e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cviebrock/laravel-elasticsearch/zipball/d135f3ffd560cb465910d6d39edb5206d11c0f2e",
+                "reference": "d135f3ffd560cb465910d6d39edb5206d11c0f2e",
+                "shasum": ""
+            },
+            "require": {
+                "elasticsearch/elasticsearch": "^7.0",
+                "ext-json": "*",
+                "illuminate/contracts": "^8.0",
+                "illuminate/support": "^8.0",
+                "php": "^7.3"
+            },
+            "require-dev": {
+                "limedeck/phpunit-detailed-printer": "^6.0",
+                "orchestra/testbench": "^6.0",
+                "phpunit/phpunit": "^9.3"
+            },
+            "suggest": {
+                "aws/aws-sdk-php": "Required to connect to an Elasticsearch host on AWS (^3.80)"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Cviebrock\\LaravelElasticsearch\\ServiceProvider"
+                    ],
+                    "aliases": {
+                        "Elasticsearch": "Cviebrock\\LaravelElasticsearch\\Facade"
+                    }
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Cviebrock\\LaravelElasticsearch\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Colin Viebrock",
+                    "email": "colin@viebrock.ca"
+                }
+            ],
+            "description": "An easy way to use the official PHP ElasticSearch client in your Laravel applications.",
+            "homepage": "https://github.com/cviebrock/laravel-elasticsearch",
+            "keywords": [
+                "client",
+                "elasticsearch",
+                "laravel",
+                "search"
+            ],
+            "support": {
+                "issues": "https://github.com/cviebrock/laravel-elasticsearch/issues",
+                "source": "https://github.com/cviebrock/laravel-elasticsearch/tree/8.0.1"
+            },
+            "time": "2020-09-30T00:37:15+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
@@ -10010,7 +10079,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.3|^8.0"
+        "php": "^7.4|^8.0"
     },
     "platform-dev": [],
     "plugin-api-version": "2.0.0"

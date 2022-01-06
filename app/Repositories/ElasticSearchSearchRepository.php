@@ -3,11 +3,25 @@
 namespace App\Repositories;
 
 use App\Interfaces\Repositories\SearchRepositoryInterface;
-use App\Models\Random;
-use ElasticScoutDriverPlus\Support\Query;
+use App\Interfaces\Services\ElasticSearchWrapperInterface;
 
 class ElasticSearchSearchRepository implements SearchRepositoryInterface
 {
+    /**
+     * @var ElasticSearchWrapperInterface
+     */
+    protected ElasticSearchWrapperInterface $elasticSearchWrapper;
+
+    /**
+     * ElasticSearchSearchRepository constructor.
+     *
+     * @param ElasticSearchWrapperInterface $elasticSearchWrapper
+     */
+    public function __construct(ElasticSearchWrapperInterface $elasticSearchWrapper)
+    {
+        $this->elasticSearchWrapper = $elasticSearchWrapper;
+    }
+
     /**
      * Returns all random
      *
@@ -28,18 +42,9 @@ class ElasticSearchSearchRepository implements SearchRepositoryInterface
      */
     public function findAllText($field, $value): array
     {
-        $query = Query::match()
-            ->field($field)
-            ->query($value);
+        $filters[] = [ 'operator' => 'eq', 'property' => $field, 'value' => $value ];
 
-        $randomness = Random::searchQuery($query)->execute();
-
-        $results = [];
-        foreach($randomness->documents() as $random) {
-            $results[] = $random->content();
-        }
-
-        return $results;
+        return $this->elasticSearchWrapper->search('randomness', '*', $filters);
     }
 
     /**
@@ -53,19 +58,12 @@ class ElasticSearchSearchRepository implements SearchRepositoryInterface
      */
     public function findBetweenDates($column, $start, $end): array
     {
-        $query = Query::range()
-            ->field($column)
-            ->gte($start)
-            ->lte($end);
+        $filters[] = [ 'operator' => 'range', 'property' => $column, 'value' => [
+            'gte' => $start,
+            'lte' => $end
+        ] ];
 
-        $randomness = Random::searchQuery($query)->execute();
-
-        $results = [];
-        foreach($randomness->documents() as $random) {
-            $results[] = $random->content();
-        }
-
-        return $results;
+        return $this->elasticSearchWrapper->search('randomness', '*', $filters);
     }
 
     /**
@@ -79,27 +77,14 @@ class ElasticSearchSearchRepository implements SearchRepositoryInterface
      */
     public function findByGeoLocation($latitude, $longitude, int $distance = 15): array
     {
-        $query = [
-            'bool' => [
-                'filter' => [
-                    'geo_distance' => [
-                        'distance' => $distance,
-                        'location' => [
-                            'lat' => $latitude,
-                            'lon' => $longitude
-                        ]
-                    ]
-                ]
+        $filters[] = [ 'operator' => 'geo_distance', 'value' => [
+            'distance' => $distance . 'km',
+            'location' => [
+                'lat' => $latitude,
+                'lon' => $longitude
             ]
-        ];
+        ] ];
 
-        $randomness = Random::searchQuery($query)->execute();
-
-        $results = [];
-        foreach($randomness->documents() as $random) {
-            $results[] = $random->content();
-        }
-
-        return $results;
+        return $this->elasticSearchWrapper->search('randomness', '*', $filters);
     }
 }

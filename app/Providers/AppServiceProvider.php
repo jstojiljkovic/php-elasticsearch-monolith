@@ -5,17 +5,19 @@ namespace App\Providers;
 use App\Http\Controllers\Api\V1\CombinedController;
 use App\Http\Controllers\Api\V1\RandomESController;
 use App\Http\Controllers\Api\V1\RandomSQLController;
+use App\Interfaces\Services\ElasticSearchWrapperInterface;
 use App\Interfaces\Services\RandomServiceInterface;
 use App\Interfaces\Services\SearchServiceInterface;
 use App\Interfaces\Services\UserServiceInterface;
 use App\Repositories\CombinedRepository;
 use App\Repositories\ElasticSearchSearchRepository;
 use App\Repositories\EloquentSearchRepository;
-use App\Services\ElasticSearchSearchService;
-use App\Services\EloquentSearchService;
+use App\Services\ElasticSearchWrapperService;
 use App\Services\RandomService;
 use App\Services\SearchService;
 use App\Services\UserService;
+use Cviebrock\LaravelElasticsearch\Factory;
+use Cviebrock\LaravelElasticsearch\Manager;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -35,10 +37,20 @@ class AppServiceProvider extends ServiceProvider
             ->give(function () {
                 return new SearchService(new EloquentSearchRepository());
             });
+        $this->app->bind(ElasticSearchWrapperInterface::class, ElasticSearchSearchRepository::class);
         $this->app->when(RandomESController::class)
             ->needs(SearchServiceInterface::class)
             ->give(function () {
-                return new SearchService(new ElasticSearchSearchRepository());
+                return new SearchService(
+                    new ElasticSearchSearchRepository(
+                        new ElasticSearchWrapperService(
+                            new Manager(
+                                $this->app,
+                                new Factory()
+                            )
+                        )
+                    )
+                );
             });
         $this->app->when(CombinedController::class)
             ->needs(SearchServiceInterface::class)

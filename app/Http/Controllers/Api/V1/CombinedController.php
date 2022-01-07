@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
+use App\Http\Requests\SearchCardTypeRequest;
 use App\Http\Requests\SearchDateBetweenRequest;
 use App\Http\Requests\SearchGeoLocationRequest;
 use App\Http\Requests\SearchRandomRequest;
 use App\Interfaces\Services\SearchServiceInterface;
 use Illuminate\Http\JsonResponse;
 
-class RandomESController extends Controller
+class CombinedController
 {
     /**
      * @var SearchServiceInterface
@@ -66,6 +66,18 @@ class RandomESController extends Controller
             $request->input('lon'),
             $request->input('distance', 15)
         );
+
+        return response()->json([ 'data' => $randomness ]);
+    }
+
+    /**
+     * @param SearchCardTypeRequest $request
+     *
+     * @return JsonResponse
+     */
+    public function searchByCardType(SearchCardTypeRequest $request): JsonResponse
+    {
+        $randomness = $this->searchService->findByCardType($request->input('type'));
 
         return response()->json([ 'data' => $randomness ]);
     }

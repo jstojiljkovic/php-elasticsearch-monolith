@@ -31,4 +31,5 @@ Route::group([ 'middleware' => [ 'auth.basic.once' ] ], function () {
     Route::get('randomness/text-search', [ CombinedController::class, 'textSearch' ])->name('randomness.textSearch');
     Route::get('randomness/date-search', [ CombinedController::class, 'dateBetweenSearch' ])->name('randomness.dateBetweenSearch');
     Route::get('randomness/location-search', [ CombinedController::class, 'searchByGeoLocation' ])->name('randomness.searchByGeoLocation');
+    Route::get('randomness/card-search', [ CombinedController::class, 'searchByCardType' ])->name('randomness.searchByCardType');
 });

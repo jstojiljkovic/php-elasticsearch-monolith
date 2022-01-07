@@ -72,4 +72,16 @@ class SearchService implements SearchServiceInterface
     {
         return $this->searchRepository->findByGeoLocation($latitude, $longitude, $distance);
     }
+
+    /**
+     * Returns all the results matching card type
+     *
+     * @param $type
+     *
+     * @return array
+     */
+    public function findByCardType($type): array
+    {
+        return $this->searchRepository->findByCardType($type);
+    }
 }

@@ -119,4 +119,26 @@ class CombinedRepository implements SearchRepositoryInterface
 
         return DataFormatter::formatCombinedData($sqlEnd, $sqlCount, $elasticEnd, $elasticCount);
     }
+
+    /**
+     * Returns all the results matching card type
+     *
+     * @param $type
+     *
+     * @return array
+     */
+    public function findByCardType($type): array
+    {
+        $sqlBegin = microtime(true);
+        $sqlCount = Random::where('type', $type)->count();
+        $sqlEnd = microtime(true) - $sqlBegin;
+
+        $filters[] = [ 'operator' => 'eq', 'property' => 'type', 'value' => $type ];
+
+        $elasticBegin = microtime(true);
+        $elasticCount = $this->elasticSearchWrapper->count('randomness', $filters);
+        $elasticEnd = microtime(true) - $elasticBegin;
+
+        return DataFormatter::formatCombinedData($sqlEnd, $sqlCount, $elasticEnd, $elasticCount);
+    }
 }

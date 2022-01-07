@@ -66,4 +66,16 @@ class EloquentSearchRepository implements SearchRepositoryInterface
             ->get()
             ->toArray();
     }
+
+    /**
+     * Returns all the results matching card type
+     *
+     * @param $type
+     *
+     * @return array
+     */
+    public function findByCardType($type): array
+    {
+        // TODO: Implement findByCardType() method.
+    }
 }

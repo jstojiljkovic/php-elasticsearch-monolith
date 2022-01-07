@@ -87,4 +87,16 @@ class ElasticSearchSearchRepository implements SearchRepositoryInterface
 
         return $this->elasticSearchWrapper->search('randomness', '*', $filters);
     }
+
+    /**
+     * Returns all the results matching card type
+     *
+     * @param $type
+     *
+     * @return array
+     */
+    public function findByCardType($type): array
+    {
+        // TODO: Implement findByCardType() method.
+    }
 }

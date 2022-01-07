@@ -42,4 +42,13 @@ interface SearchServiceInterface
      * @return array
      */
     public function findByGeoLocation($latitude, $longitude, int $distance = 15): array;
+
+    /**
+     * Returns all the results matching card type
+     *
+     * @param $type
+     *
+     * @return array
+     */
+    public function findByCardType($type): array;
 }

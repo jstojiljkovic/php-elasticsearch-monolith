@@ -29,7 +29,9 @@ class EloquentSearchRepository implements SearchRepositoryInterface
      */
     public function findAllText($field, $value): array
     {
-        return Random::where($field, 'like', '%' . $value . '%')->get()->toArray();
+        $data = Random::where($field, 'like', '%' . $value . '%')->get()->toArray();
+
+        return $data;
     }
 
     /**
@@ -59,9 +61,21 @@ class EloquentSearchRepository implements SearchRepositoryInterface
     {
         return Random::select([
             '*',
-            DB::raw('( 0.621371 * 3959 * acos( cos( radians(' . $latitude . ') ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(' . $longitude . ') ) + sin( radians(' . $latitude . ') ) * sin( radians(latitude) ) ) ) AS distance') ])
+            DB::raw('( 6371 * acos( cos( radians(' . $latitude . ') ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(' . $longitude . ') ) + sin( radians(' . $latitude . ') ) * sin( radians(latitude) ) ) ) AS distance') ])
             ->havingRaw('distance < ' . $distance)
             ->get()
             ->toArray();
+    }
+
+    /**
+     * Returns all the results matching card type
+     *
+     * @param $type
+     *
+     * @return array
+     */
+    public function findByCardType($type): array
+    {
+        // TODO: Implement findByCardType() method.
     }
 }
